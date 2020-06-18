@@ -1,0 +1,26 @@
+{
+  "name": "headsnet/collections",
+  "type": "library",
+  "description": "Base classes for collections",
+  "keywords": ["collection", "php"],
+  "homepage": "https://github.com/headsnet/collections",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/headsnet/collections/issues"
+  },
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+  },
+  "suggest": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Headsnet\\Collections\\": "src/"
+    },
+    "exclude-from-classmap": [
+      "/tests/"
+    ]
+  }
+}

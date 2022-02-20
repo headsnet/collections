@@ -8,12 +8,16 @@ use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 
+/**
+ * @template TValue
+ * @extends IteratorAggregate<TValue>
+ */
 interface ImmutableCollection extends Countable, IteratorAggregate, ArrayAccess
 {
     public function getItemClassName(): string;
 
     /**
-     * @return mixed
+     * @return TValue
      */
     public function getItem(int $index);
 }

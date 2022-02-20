@@ -8,6 +8,10 @@ use Headsnet\Collections\Exception\ImmutabilityException;
 use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\OutOfRangeException;
 
+/**
+ * @template TValue
+ * @implements ImmutableCollection<TValue>
+ */
 abstract class AbstractImmutableCollection implements ImmutableCollection
 {
     protected string $itemClassName;
@@ -18,7 +22,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      * Creates a new typed collection.
      *
      * @param string $itemClassName String representing the class name of the valid type for the items
-     * @param array  $items         Array with all the objects to be added. They must be of the class $itemClassName.
+     * @param array<TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
      */
     public function __construct(string $itemClassName, array $items = [])
     {
@@ -44,7 +48,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return mixed
+     * @return TValue
      */
     public function getItem(int $index)
     {
@@ -62,7 +66,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return mixed
+     * @return TValue
      */
     public function first()
     {
@@ -70,7 +74,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return mixed
+     * @return TValue
      */
     public function last()
     {
@@ -94,7 +98,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param mixed $element
+     * @param TValue $element
      */
     public function contains($element): bool
     {
@@ -139,7 +143,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
 
     /**
      * @param int   $offset
-     * @param mixed $value
+     * @param TValue $value
      */
     public function offsetSet($offset, $value): void
     {
@@ -157,7 +161,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     /**
      * @param int $offset
      *
-     * @return mixed
+     * @return TValue
      */
     public function offsetGet($offset)
     {

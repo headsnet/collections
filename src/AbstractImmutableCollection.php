@@ -163,7 +163,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      *
      * @return TValue
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->getItem($offset);
     }

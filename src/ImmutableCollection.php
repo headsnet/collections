@@ -9,15 +9,21 @@ use Countable;
 use IteratorAggregate;
 
 /**
+ * @template TKey
  * @template TValue
- * @extends IteratorAggregate<TValue>
+ * @extends IteratorAggregate<TKey, TValue>
+ * @extends ArrayAccess<TKey, TValue>
  */
 interface ImmutableCollection extends Countable, IteratorAggregate, ArrayAccess
 {
+    /**
+     * @return string
+     */
     public function getItemClassName(): string;
 
     /**
+     * @param TKey $index
      * @return TValue
      */
-    public function getItem(int $index);
+    public function getItem($index);
 }

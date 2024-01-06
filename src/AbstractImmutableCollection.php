@@ -10,12 +10,15 @@ use Headsnet\Collections\Exception\OutOfRangeException;
 
 /**
  * @template TValue
- * @implements ImmutableCollection<TValue>
+ * @implements ImmutableCollection<int, TValue>
  */
 abstract class AbstractImmutableCollection implements ImmutableCollection
 {
     protected string $itemClassName;
 
+    /**
+     * @var array<TValue>
+     */
     protected array $items = [];
 
     /**
@@ -48,9 +51,11 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
+     * @param int $index
+     *
      * @return TValue
      */
-    public function getItem(int $index)
+    public function getItem($index)
     {
         if ($index >= $this->count())
         {
@@ -60,13 +65,16 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return $this->items[$index];
     }
 
-    public function indexExists(int $index): bool
+    /**
+     * @param int $index
+     */
+    public function indexExists($index): bool
     {
         return $index < $this->count();
     }
 
     /**
-     * @return TValue
+     * @return TValue|false
      */
     public function first()
     {
@@ -74,7 +82,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return TValue
+     * @return TValue|false
      */
     public function last()
     {
@@ -82,13 +90,20 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param AbstractImmutableCollection $compareWith
+     * @param AbstractImmutableCollection<TValue> $compareWith
      */
     public function equals(self $compareWith): bool
     {
         foreach ($this->items as $index => $item)
         {
-            if (false === $item->equals($compareWith->getItem($index)))
+            try
+            {
+                if ($item !== $compareWith->getItem($index))
+                {
+                    return false;
+                }
+            }
+            catch (OutOfRangeException)
             {
                 return false;
             }
@@ -105,12 +120,18 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return in_array($element, $this->items, true);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function map(callable $func): array
     {
         return array_map($func, $this->items);
     }
 
-    public function filter(callable $func): self
+    /**
+     * @return static<TValue>
+     */
+    public function filter(callable $func): AbstractImmutableCollection|static
     {
         $class = static::class;
 
@@ -122,6 +143,9 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return array_walk($this->items, $func);
     }
 
+    /**
+     * @return array<int, TValue>
+     */
     public function toArray(): array
     {
         return $this->items;
@@ -136,6 +160,9 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return count($this->items);
     }
 
+    /**
+     * @return ArrayIterator<(int&int)|(string&int), TValue>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->items);
@@ -163,7 +190,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      *
      * @return TValue
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->getItem($offset);
     }

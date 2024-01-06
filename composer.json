@@ -9,15 +9,18 @@
     "issues": "https://github.com/headsnet/collections/issues"
   },
   "require": {
-    "php": ">=7.4"
+    "php": ">=8.2"
   },
   "require-dev": {
+    "phpunit/phpunit": "^10.5",
+    "phpstan/phpstan": "^1.10"
   },
   "suggest": {
   },
   "autoload": {
     "psr-4": {
-      "Headsnet\\Collections\\": "src/"
+      "Headsnet\\Collections\\": "src/",
+      "Headsnet\\Collections\\Test\\": "tests/unit/"
     },
     "exclude-from-classmap": [
       "/tests/"

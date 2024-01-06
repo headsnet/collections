@@ -9,16 +9,15 @@ use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\OutOfRangeException;
 
 /**
- * @template TKey
  * @template TValue
- * @implements ImmutableCollection<TKey, TValue>
+ * @implements ImmutableCollection<int, TValue>
  */
 abstract class AbstractImmutableCollection implements ImmutableCollection
 {
     protected string $itemClassName;
 
     /**
-     * @var array<TKey, TValue>
+     * @var array<TValue>
      */
     protected array $items = [];
 
@@ -26,7 +25,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      * Creates a new typed collection.
      *
      * @param string $itemClassName String representing the class name of the valid type for the items
-     * @param array<TKey, TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
+     * @param array<TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
      */
     public function __construct(string $itemClassName, array $items = [])
     {
@@ -52,7 +51,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey $index
+     * @param int $index
      *
      * @return TValue
      */
@@ -67,7 +66,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey $index
+     * @param int $index
      */
     public function indexExists($index): bool
     {
@@ -91,7 +90,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param AbstractImmutableCollection<TKey, TValue> $compareWith
+     * @param AbstractImmutableCollection<TValue> $compareWith
      */
     public function equals(self $compareWith): bool
     {
@@ -130,7 +129,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return static<TKey, TValue>
+     * @return static<TValue>
      */
     public function filter(callable $func): AbstractImmutableCollection|static
     {
@@ -145,7 +144,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return array<TKey, TValue>
+     * @return array<int, TValue>
      */
     public function toArray(): array
     {
@@ -162,7 +161,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return ArrayIterator<(int&TKey)|(string&TKey), TValue>
+     * @return ArrayIterator<(int&int)|(string&int), TValue>
      */
     public function getIterator(): ArrayIterator
     {
@@ -170,7 +169,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey   $offset
+     * @param int   $offset
      * @param TValue $value
      */
     public function offsetSet($offset, $value): void
@@ -179,7 +178,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey $offset
+     * @param int $offset
      */
     public function offsetUnset($offset): void
     {
@@ -187,7 +186,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey $offset
+     * @param int $offset
      *
      * @return TValue
      */
@@ -197,7 +196,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param TKey $offset
+     * @param int $offset
      */
     public function offsetExists($offset): bool
     {

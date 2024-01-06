@@ -40,7 +40,7 @@ final class CollectionTest extends TestCase
 
         $this->expectException(InvalidTypeException::class);
 
-        new DummyCollection([$incorrectItem]);
+        new DummyCollection([$incorrectItem]); // @phpstan-ignore-line
     }
 
     public function test_first_returns_first_item(): void

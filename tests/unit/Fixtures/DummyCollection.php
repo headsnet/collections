@@ -6,7 +6,7 @@ namespace Headsnet\Collections\Test\Fixtures;
 use Headsnet\Collections\AbstractImmutableCollection;
 
 /**
- * @extends AbstractImmutableCollection<int, DummyCollectionItem>
+ * @extends AbstractImmutableCollection<DummyCollectionItem>
  */
 final class DummyCollection extends AbstractImmutableCollection
 {

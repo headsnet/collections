@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Headsnet\Collections\Test;
 
+use Headsnet\Collections\Exception\ImmutabilityException;
 use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Test\Fixtures\DummyCollection;
@@ -41,6 +42,27 @@ final class CollectionTest extends TestCase
         $this->expectException(InvalidTypeException::class);
 
         new DummyCollection([$incorrectItem]); // @phpstan-ignore-line
+    }
+
+    public function test_cannot_add_item_to_immutable_collection(): void
+    {
+        $collectionItem1 = new DummyCollectionItem();
+        $collectionItem2 = new DummyCollectionItem();
+        $sut = new DummyCollection([$collectionItem1]);
+
+        $this->expectException(ImmutabilityException::class);
+
+        $sut->offsetSet(1, $collectionItem2);
+    }
+
+    public function test_cannot_remove_item_from_immutable_collection(): void
+    {
+        $collectionItem1 = new DummyCollectionItem();
+        $sut = new DummyCollection([$collectionItem1]);
+
+        $this->expectException(ImmutabilityException::class);
+
+        $sut->offsetUnset(0);
     }
 
     public function test_first_returns_first_item(): void

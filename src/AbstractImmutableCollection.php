@@ -9,20 +9,24 @@ use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\OutOfRangeException;
 
 /**
+ * @template TKey
  * @template TValue
- * @implements ImmutableCollection<TValue>
+ * @implements ImmutableCollection<TKey, TValue>
  */
 abstract class AbstractImmutableCollection implements ImmutableCollection
 {
     protected string $itemClassName;
 
+    /**
+     * @var array<TKey, TValue>
+     */
     protected array $items = [];
 
     /**
      * Creates a new typed collection.
      *
      * @param string $itemClassName String representing the class name of the valid type for the items
-     * @param array<TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
+     * @param array<TKey, TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
      */
     public function __construct(string $itemClassName, array $items = [])
     {
@@ -48,9 +52,11 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
+     * @param TKey $index
+     *
      * @return TValue
      */
-    public function getItem(int $index)
+    public function getItem($index)
     {
         if ($index >= $this->count())
         {
@@ -60,13 +66,16 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return $this->items[$index];
     }
 
-    public function indexExists(int $index): bool
+    /**
+     * @param TKey $index
+     */
+    public function indexExists($index): bool
     {
         return $index < $this->count();
     }
 
     /**
-     * @return TValue
+     * @return TValue|false
      */
     public function first()
     {
@@ -74,7 +83,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return TValue
+     * @return TValue|false
      */
     public function last()
     {
@@ -82,13 +91,20 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param AbstractImmutableCollection $compareWith
+     * @param AbstractImmutableCollection<TKey, TValue> $compareWith
      */
     public function equals(self $compareWith): bool
     {
         foreach ($this->items as $index => $item)
         {
-            if (false === $item->equals($compareWith->getItem($index)))
+            try
+            {
+                if ($item !== $compareWith->getItem($index))
+                {
+                    return false;
+                }
+            }
+            catch (OutOfRangeException)
             {
                 return false;
             }
@@ -105,12 +121,18 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return in_array($element, $this->items, true);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function map(callable $func): array
     {
         return array_map($func, $this->items);
     }
 
-    public function filter(callable $func): self
+    /**
+     * @return static<TKey, TValue>
+     */
+    public function filter(callable $func): AbstractImmutableCollection|static
     {
         $class = static::class;
 
@@ -122,6 +144,9 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return array_walk($this->items, $func);
     }
 
+    /**
+     * @return array<TKey, TValue>
+     */
     public function toArray(): array
     {
         return $this->items;
@@ -136,13 +161,16 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return count($this->items);
     }
 
+    /**
+     * @return ArrayIterator<(int&TKey)|(string&TKey), TValue>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->items);
     }
 
     /**
-     * @param int   $offset
+     * @param TKey   $offset
      * @param TValue $value
      */
     public function offsetSet($offset, $value): void
@@ -151,7 +179,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param int $offset
+     * @param TKey $offset
      */
     public function offsetUnset($offset): void
     {
@@ -159,17 +187,17 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param int $offset
+     * @param TKey $offset
      *
      * @return TValue
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->getItem($offset);
     }
 
     /**
-     * @param int $offset
+     * @param TKey $offset
      */
     public function offsetExists($offset): bool
     {

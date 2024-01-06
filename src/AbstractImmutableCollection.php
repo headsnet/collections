@@ -70,19 +70,19 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @return TValue|false
+     * @return TValue|null
      */
     public function first()
     {
-        return reset($this->items);
+        return reset($this->items) ?: null;
     }
 
     /**
-     * @return TValue|false
+     * @return TValue|null
      */
     public function last()
     {
-        return end($this->items);
+        return end($this->items) ?: null;
     }
 
     /**

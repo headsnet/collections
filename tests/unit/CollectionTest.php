@@ -53,6 +53,13 @@ final class CollectionTest extends TestCase
         $this->assertSame($collectionItem1, $sut->first());
     }
 
+    public function test_first_returns_null_if_collection_is_empty(): void
+    {
+        $sut = new DummyCollection([]);
+
+        $this->assertNull($sut->first());
+    }
+
     public function test_last_returns_last_item(): void
     {
         $collectionItem1 = new DummyCollectionItem();
@@ -62,6 +69,13 @@ final class CollectionTest extends TestCase
         $sut = new DummyCollection([$collectionItem1, $collectionItem2, $collectionItem3]);
 
         $this->assertSame($collectionItem3, $sut->last());
+    }
+
+    public function test_last_returns_null_if_collection_is_empty(): void
+    {
+        $sut = new DummyCollection([]);
+
+        $this->assertNull($sut->last());
     }
 
     public function test_equality_check_succeeds_correctly(): void

@@ -6,6 +6,7 @@ namespace Headsnet\Collections;
 use ArrayIterator;
 use Headsnet\Collections\Exception\ImmutabilityException;
 use Headsnet\Collections\Exception\InvalidTypeException;
+use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Exception\OutOfRangeException;
 
 /**
@@ -78,11 +79,27 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
+     * @return TValue
+     */
+    public function firstOrFail()
+    {
+        return reset($this->items) ?: throw new ItemNotFoundException();
+    }
+
+    /**
      * @return TValue|null
      */
     public function last()
     {
         return end($this->items) ?: null;
+    }
+
+    /**
+     * @return TValue
+     */
+    public function lastOrFail()
+    {
+        return end($this->items) ?: throw new ItemNotFoundException();
     }
 
     /**

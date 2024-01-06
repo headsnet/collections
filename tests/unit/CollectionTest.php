@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Headsnet\Collections\Test;
 
 use Headsnet\Collections\Exception\InvalidTypeException;
+use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Test\Fixtures\DummyCollection;
 use Headsnet\Collections\Test\Fixtures\DummyCollectionItem;
 use Headsnet\Collections\Test\Fixtures\OtherCollectionItem;
@@ -60,6 +61,26 @@ final class CollectionTest extends TestCase
         $this->assertNull($sut->first());
     }
 
+    public function test_first_or_fail_returns_first_item(): void
+    {
+        $collectionItem1 = new DummyCollectionItem();
+        $collectionItem2 = new DummyCollectionItem();
+        $collectionItem3 = new DummyCollectionItem();
+
+        $sut = new DummyCollection([$collectionItem1, $collectionItem2, $collectionItem3]);
+
+        $this->assertSame($collectionItem1, $sut->firstOrFail());
+    }
+
+    public function test_first_or_fail_throws_exception_if_collection_is_empty(): void
+    {
+        $sut = new DummyCollection([]);
+
+        $this->expectException(ItemNotFoundException::class);
+
+        $sut->firstOrFail();
+    }
+
     public function test_last_returns_last_item(): void
     {
         $collectionItem1 = new DummyCollectionItem();
@@ -76,6 +97,26 @@ final class CollectionTest extends TestCase
         $sut = new DummyCollection([]);
 
         $this->assertNull($sut->last());
+    }
+
+    public function test_last_or_fail_returns_first_item(): void
+    {
+        $collectionItem1 = new DummyCollectionItem();
+        $collectionItem2 = new DummyCollectionItem();
+        $collectionItem3 = new DummyCollectionItem();
+
+        $sut = new DummyCollection([$collectionItem1, $collectionItem2, $collectionItem3]);
+
+        $this->assertSame($collectionItem3, $sut->lastOrFail());
+    }
+
+    public function test_last_or_fail_throws_exception_if_collection_is_empty(): void
+    {
+        $sut = new DummyCollection([]);
+
+        $this->expectException(ItemNotFoundException::class);
+
+        $sut->lastOrFail();
     }
 
     public function test_equality_check_succeeds_correctly(): void

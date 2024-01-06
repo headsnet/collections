@@ -7,3 +7,58 @@
 Headsnet Collections
 =====
 
+### Installation
+
+```bash
+composer require headsnet/collections
+```
+
+### Usage
+
+Assuming you have some class `Foo` that you want to put into a collection:
+```php
+final class Foo
+{
+    public function __construct(
+        public string $name
+    ) {
+    }
+}
+```
+
+Then create a custom named collection to hold the `Foo` instances:
+```php
+/**
+ * @extends AbstractImmutableCollection<Foo>
+ */
+final class FooCollection extends AbstractImmutableCollection
+{
+    /**
+     * @param array<Foo> $items
+     */
+    public function __construct(array $items)
+    {
+        parent::__construct(Foo::class, $items);
+    }
+}
+```
+
+Then instantiate the collection:
+```php
+$foo1 = new Foo();
+$foo2 = new Foo();
+
+$allFoos = new FooCollection([$foo1, $foo2]);
+```
+
+You then have an immutable, iterable object that can be filtered, mapped and walked:
+```php
+foreach ($allFoos as $foo) {
+    $this->assertInstanceOf(Foo::class, $foo);
+}
+```
+
+### Contributing
+
+Contributions are welcome. Please submit pull requests with one fix/feature per
+pull request.

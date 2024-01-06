@@ -31,15 +31,12 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     {
         $this->itemClassName = $itemClassName;
 
-        foreach ($items as $item)
-        {
-            if (!($item instanceof $itemClassName))
-            {
+        foreach ($items as $item) {
+            if (! ($item instanceof $itemClassName)) {
                 throw new InvalidTypeException();
             }
 
-            if (!in_array($item, $this->items, true))
-            {
+            if (! in_array($item, $this->items, true)) {
                 $this->items[] = $item;
             }
         }
@@ -57,8 +54,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      */
     public function getItem($index)
     {
-        if ($index >= $this->count())
-        {
+        if ($index >= $this->count()) {
             throw new OutOfRangeException('Index: ' . $index);
         }
 
@@ -94,17 +90,12 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
      */
     public function equals(self $compareWith): bool
     {
-        foreach ($this->items as $index => $item)
-        {
-            try
-            {
-                if ($item !== $compareWith->getItem($index))
-                {
+        foreach ($this->items as $index => $item) {
+            try {
+                if ($item !== $compareWith->getItem($index)) {
                     return false;
                 }
-            }
-            catch (OutOfRangeException)
-            {
+            } catch (OutOfRangeException) {
                 return false;
             }
         }

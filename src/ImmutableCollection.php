@@ -16,9 +16,6 @@ use IteratorAggregate;
  */
 interface ImmutableCollection extends Countable, IteratorAggregate, ArrayAccess
 {
-    /**
-     * @return string
-     */
     public function getItemClassName(): string;
 
     /**

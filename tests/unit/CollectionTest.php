@@ -28,8 +28,7 @@ final class CollectionTest extends TestCase
 
         $sut = new DummyCollection([$collectionItem1, $collectionItem2]);
 
-        foreach ($sut as $collectionItem)
-        {
+        foreach ($sut as $collectionItem) {
             $this->assertInstanceOf(DummyCollectionItem::class, $collectionItem);
         }
     }

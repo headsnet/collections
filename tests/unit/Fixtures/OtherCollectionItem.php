@@ -5,5 +5,4 @@ namespace Headsnet\Collections\Test\Fixtures;
 
 final class OtherCollectionItem
 {
-
 }

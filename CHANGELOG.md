@@ -8,6 +8,7 @@ Change Log
 - Added helper methods `Collection::isEmpty()` and `Collection::isNotEmpty()`.
 - Added `Collection::reverse()` helper to reverse the order of the collection.
 - Support creating collections from Doctrine Collections using `Collection::fromDoctrine()`.
+- Support creating collections by mapping array of other objects using `Collection::mapFrom()`.
 
 # 0.2.0
 - Minimum PHP version bumped to 8.1.

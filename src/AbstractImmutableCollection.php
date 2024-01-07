@@ -66,6 +66,18 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return new $class($items->toArray());
     }
 
+    /**
+     * @param array<mixed> $items
+     */
+    public static function mapFrom(array $items, callable $mapper): static
+    {
+        $class = static::class;
+
+        return new $class(
+            array_map($mapper, $items)
+        );
+    }
+
     public static function empty(): static
     {
         $class = static::class;

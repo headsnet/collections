@@ -81,6 +81,19 @@ final class ImmutableCollectionTest extends TestCase
         $this->assertEquals($collectionItem2, $sut->lastOrFail());
     }
 
+    public function test_can_create_collection_by_mapping_array_of_other_objects(): void
+    {
+        $collectionItem1 = new CompanionObject('one');
+        $collectionItem2 = new CompanionObject('two');
+
+        $sut = DummyImmutableCollection::mapFrom(
+            [$collectionItem1, $collectionItem2],
+            fn (CompanionObject $companionObject): DummyCollectionItem => new DummyCollectionItem($collectionItem2->name)
+        );
+
+        $this->assertEquals(2, $sut->count());
+    }
+
     public function test_is_empty_check_is_correct(): void
     {
         $sut = DummyImmutableCollection::empty();

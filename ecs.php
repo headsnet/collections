@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
+use PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer;
 use PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
@@ -14,6 +15,7 @@ return function (ECSConfig $ecsConfig): void {
 
     $ecsConfig->skip([
         BlankLineAfterOpeningTagFixer::class,
+        NotOperatorWithSuccessorSpaceFixer::class,
     ]);
 
     $ecsConfig->rules([

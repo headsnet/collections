@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace Headsnet\Collections;
 
 use ArrayIterator;
-use Headsnet\Collections\Exception\ImmutabilityException;
 use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Exception\OutOfRangeException;
 
 /**
  * @template TValue
- * @implements ImmutableCollection<int, TValue>
+ * @implements ImmutableCollection<TValue>
  */
 abstract class AbstractImmutableCollection implements ImmutableCollection
 {
@@ -23,37 +22,50 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     protected array $items = [];
 
     /**
-     * Creates a new typed collection.
-     *
-     * @param string $itemClassName String representing the class name of the valid type for the items
-     * @param array<TValue> $items Array with all the objects to be added. They must be of the class $itemClassName.
+     * @param array<TValue> $items
      */
-    public function __construct(string $itemClassName, array $items = [])
+    public function __construct(array $items)
     {
+        $itemClassName = $this->getItemClassName();
         $this->itemClassName = $itemClassName;
 
         foreach ($items as $item) {
-            if (! ($item instanceof $itemClassName)) {
+            if (!$item instanceof $itemClassName) {
                 throw new InvalidTypeException();
             }
 
-            if (! in_array($item, $this->items, true)) {
+            if (!in_array($item, $this->items, true)) {
                 $this->items[] = $item;
             }
         }
     }
 
-    public function getItemClassName(): string
+    /**
+     * @return class-string
+     */
+    abstract public function getItemClassName(): string;
+
+    /**
+     * @param array<TValue> $items
+     */
+    public static function from(array $items): static
     {
-        return $this->itemClassName;
+        $class = static::class;
+
+        return new $class($items);
+    }
+
+    public static function empty(): static
+    {
+        $class = static::class;
+
+        return new $class([]);
     }
 
     /**
-     * @param int $index
-     *
      * @return TValue
      */
-    public function getItem($index)
+    public function get(int $index)
     {
         if ($index >= $this->count()) {
             throw new OutOfRangeException('Index: ' . $index);
@@ -62,12 +74,19 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return $this->items[$index];
     }
 
-    /**
-     * @param int $index
-     */
-    public function indexExists($index): bool
+    public function has(int $index): bool
     {
         return $index < $this->count();
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return $this->count() > 0;
     }
 
     /**
@@ -103,13 +122,13 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
-     * @param AbstractImmutableCollection<TValue> $compareWith
+     * @param Collection<TValue> $compareWith
      */
-    public function equals(self $compareWith): bool
+    public function equals(Collection $compareWith): bool
     {
         foreach ($this->items as $index => $item) {
             try {
-                if ($item !== $compareWith->getItem($index)) {
+                if ($item !== $compareWith->get($index)) {
                     return false;
                 }
             } catch (OutOfRangeException) {
@@ -139,11 +158,21 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     /**
      * @return static<TValue>
      */
-    public function filter(callable $func): AbstractImmutableCollection|static
+    public function filter(callable $func): Collection|static
     {
         $class = static::class;
 
         return new $class(array_filter($this->items, $func));
+    }
+
+    /**
+     * @return static<TValue>
+     */
+    public function reverse(): Collection|static
+    {
+        $class = static::class;
+
+        return new $class(array_reverse($this->items));
     }
 
     public function walk(callable $func): bool
@@ -159,10 +188,6 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         return $this->items;
     }
 
-    //---------------------------------------------------------------------//
-    // Implementations                                                     //
-    //---------------------------------------------------------------------//
-
     public function count(): int
     {
         return count($this->items);
@@ -174,40 +199,5 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->items);
-    }
-
-    /**
-     * @param int   $offset
-     * @param TValue $value
-     */
-    public function offsetSet($offset, $value): void
-    {
-        throw new ImmutabilityException();
-    }
-
-    /**
-     * @param int $offset
-     */
-    public function offsetUnset($offset): void
-    {
-        throw new ImmutabilityException();
-    }
-
-    /**
-     * @param int $offset
-     *
-     * @return TValue
-     */
-    public function offsetGet($offset): mixed
-    {
-        return $this->getItem($offset);
-    }
-
-    /**
-     * @param int $offset
-     */
-    public function offsetExists($offset): bool
-    {
-        return $this->indexExists($offset);
     }
 }

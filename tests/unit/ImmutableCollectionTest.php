@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Headsnet\Collections\Test;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Test\Fixtures\AugmentedImmutableCollection;
+use Headsnet\Collections\Test\Fixtures\CompanionObject;
 use Headsnet\Collections\Test\Fixtures\DummyCollectionItem;
 use Headsnet\Collections\Test\Fixtures\DummyImmutableCollection;
 use Headsnet\Collections\Test\Fixtures\OtherCollectionItem;
-use Headsnet\Collections\Test\Fixtures\CompanionObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -66,6 +67,18 @@ final class ImmutableCollectionTest extends TestCase
 
         $this->assertEquals(DummyCollectionItem::class, $sut->getItemClassName());
         $this->assertEquals($someValueObject1, $sut->companionObject);
+    }
+
+    public function test_can_create_collection_from_doctrine_collection(): void
+    {
+        $collectionItem1 = new DummyCollectionItem();
+        $collectionItem2 = new DummyCollectionItem();
+        $doctrineCollection = new ArrayCollection([$collectionItem1, $collectionItem2]);
+
+        $sut = DummyImmutableCollection::fromDoctrine($doctrineCollection);
+
+        $this->assertEquals($collectionItem1, $sut->firstOrFail());
+        $this->assertEquals($collectionItem2, $sut->lastOrFail());
     }
 
     public function test_is_empty_check_is_correct(): void

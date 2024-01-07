@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Headsnet\Collections;
 
 use ArrayIterator;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Headsnet\Collections\Exception\InvalidTypeException;
 use Headsnet\Collections\Exception\ItemNotFoundException;
 use Headsnet\Collections\Exception\OutOfRangeException;
@@ -53,6 +54,16 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
         $class = static::class;
 
         return new $class($items);
+    }
+
+    /**
+     * @param DoctrineCollection<int, TValue> $items
+     */
+    public static function fromDoctrine(DoctrineCollection $items): static
+    {
+        $class = static::class;
+
+        return new $class($items->toArray());
     }
 
     public static function empty(): static

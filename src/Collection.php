@@ -69,6 +69,14 @@ interface Collection
     public function map(callable $func): array;
 
     /**
+     * @template NewTValue of Collection
+     * @param class-string<NewTValue> $newCollectionClass
+     *
+     * @return Collection<NewTValue>
+     */
+    public function mapTo(callable $func, string $newCollectionClass): Collection;
+
+    /**
      * @return static<TValue>
      */
     public function filter(callable $func): Collection|static;

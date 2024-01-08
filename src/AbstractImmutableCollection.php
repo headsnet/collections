@@ -179,6 +179,19 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     }
 
     /**
+     * @template NewTValue of Collection
+     * @param class-string<NewTValue> $newCollectionClass
+     *
+     * @return Collection<NewTValue>
+     */
+    public function mapTo(callable $func, string $newCollectionClass): Collection
+    {
+        $mappedItems = array_map($func, $this->items);
+
+        return $newCollectionClass::from($mappedItems);
+    }
+
+    /**
      * @return static<TValue>
      */
     public function filter(callable $func): Collection|static

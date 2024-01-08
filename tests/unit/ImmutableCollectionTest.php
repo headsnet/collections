@@ -273,9 +273,33 @@ final class ImmutableCollectionTest extends TestCase
 
         $filteredCollection = $sut->filter(fn (DummyCollectionItem $item): bool => $item->name === 'one');
 
-        $this->assertInstanceOf(DummyImmutableCollection::class, $filteredCollection);
         $this->assertCount(1, $filteredCollection);
         $this->assertTrue($filteredCollection->contains($collectionItem1));
+    }
+
+    public function test_chain_multiple_filters_together(): void
+    {
+        $collectionItem1 = new DummyCollectionItem('foo 1');
+        $collectionItem2 = new DummyCollectionItem('bar 2');
+        $collectionItem3 = new DummyCollectionItem('bar 3');
+        $sut = DummyImmutableCollection::from([$collectionItem1, $collectionItem2, $collectionItem3]);
+
+        $filteredCollection = $sut
+            ->filter(fn (DummyCollectionItem $item): bool => str_contains($item->name, 'bar'))
+            ->filter(fn (DummyCollectionItem $item): bool => str_contains($item->name, '3'))
+        ;
+
+        $this->assertCount(1, $filteredCollection);
+        $this->assertTrue($filteredCollection->contains($collectionItem3));
+    }
+
+    public function test_filtering_elements_returns_new_collection(): void
+    {
+        $sut = DummyImmutableCollection::empty();
+
+        $filteredCollection = $sut->filter(fn (DummyCollectionItem $item): bool => false);
+
+        $this->assertInstanceOf(DummyImmutableCollection::class, $filteredCollection);
     }
 
     public function test_can_reverse_elements(): void
@@ -291,6 +315,15 @@ final class ImmutableCollectionTest extends TestCase
         $this->assertEquals($collectionItem3, $reversedCollection->get(0));
         $this->assertEquals($collectionItem2, $reversedCollection->get(1));
         $this->assertEquals($collectionItem1, $reversedCollection->get(2));
+    }
+
+    public function test_reversing_elements_returns_new_collection(): void
+    {
+        $sut = DummyImmutableCollection::empty();
+
+        $reversedCollection = $sut->reverse();
+
+        $this->assertInstanceOf(DummyImmutableCollection::class, $reversedCollection);
     }
 
     public function test_can_walk_elements(): void

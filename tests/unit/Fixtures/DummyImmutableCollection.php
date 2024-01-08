@@ -7,6 +7,9 @@ use Headsnet\Collections\AbstractImmutableCollection;
 
 /**
  * @extends AbstractImmutableCollection<DummyCollectionItem>
+ *
+ * @method self filter(callable $func)
+ * @method self reverse()
  */
 final class DummyImmutableCollection extends AbstractImmutableCollection
 {

@@ -30,6 +30,9 @@ Then create a custom named collection to hold the `Foo` instances:
 ```php
 /**
  * @extends AbstractImmutableCollection<Foo>
+ *
+ * @method self filter(callable $func)
+ * @method self reverse()
  */
 final class FooCollection extends AbstractImmutableCollection
 {

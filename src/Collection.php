@@ -83,7 +83,7 @@ interface Collection
     /**
      * @return array<int, TValue>
      */
-    public function toArray(): array;
+    public function all(): array;
 
     public function count(): int;
 }

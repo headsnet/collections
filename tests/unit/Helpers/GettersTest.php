@@ -40,7 +40,7 @@ final class GettersTest extends TestCase
         $collectionItem2 = new DummyCollectionItem();
         $sut = DummyImmutableCollection::from([$collectionItem1, $collectionItem2]);
 
-        $arrayOfCollectionItems = $sut->toArray();
+        $arrayOfCollectionItems = $sut->all();
 
         $this->assertIsArray($arrayOfCollectionItems);
         $this->assertEquals($arrayOfCollectionItems[0], $collectionItem1);

@@ -206,7 +206,7 @@ abstract class AbstractImmutableCollection implements ImmutableCollection
     /**
      * @return array<int, TValue>
      */
-    public function toArray(): array
+    public function all(): array
     {
         return $this->items;
     }

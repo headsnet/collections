@@ -33,12 +33,9 @@ Then create a custom named collection to hold the `Foo` instances:
  */
 final class FooCollection extends AbstractImmutableCollection
 {
-    /**
-     * @param array<Foo> $items
-     */
-    public function __construct(array $items)
+    public function getItemClassName(): string
     {
-        parent::__construct(Foo::class, $items);
+        return Foo::class;
     }
 }
 ```
